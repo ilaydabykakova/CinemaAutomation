@@ -1,0 +1,285 @@
+﻿@using CinemaAutomation.Models;
+@using CinemaAutomation.Helpers;
+@{
+    ViewBag.Title = "Yönetim Paneli";
+    var DB = new CinemaAutomationEntities();
+    var Musteriler = DB.Musteriler.ToList();
+    var Filmler = DB.Filmler.ToList();
+    string BiletNo = YardimciAraclar.RastgeleKarakter("XXXXXXXXXX");
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header" data-background-color="orange">
+                    <i class="material-icons">info_outline</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Müşteri Sayısı</p>
+                    <h3 class="title">
+                        @DB.Musteriler.Count()
+                        <small>Kişi</small>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header" data-background-color="red">
+                    <i class="material-icons">info_outline</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Film Sayısı</p>
+                    <h3 class="title">@DB.Filmler.ToList().Count()</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header" data-background-color="red">
+                    <i class="material-icons">info_outline</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Sinema Sayısı</p>
+                    <h3 class="title">@DB.Sinemalar.ToList().Count()</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header" data-background-color="red">
+                    <i class="material-icons">info_outline</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Salon Sayısı</p>
+                    <h3 class="title">@DB.Salonlar.ToList().Count()</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="red">
+                            <i class="material-icons">info_outline</i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Toplam Bilet Satış</p>
+                            <h3 class="title">@DB.Biletler.Where(w => w.RezervasyonMu != true).ToList().Sum(s => s.Tutar).Value ₺</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="green">
+                            <i class="material-icons">store</i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Bilet Sayısı</p>
+                            <h3 class="title">@DB.Biletler.Where(w => w.RezervasyonMu != true).ToList().Count() Bilet</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="green">
+                            <i class="material-icons">store</i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Biletli Koltuk Sayısı</p>
+                            <h3 class="title">@DB.Biletler.Where(w => w.RezervasyonMu != true).ToList().Sum(s => s.KoltukSayisi) Koltuk</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="red">
+                            <i class="material-icons">info_outline</i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Toplam Rez. Satış</p>
+                            <h3 class="title">@DB.Biletler.Where(w => w.RezervasyonMu == true).ToList().Sum(s => s.Tutar).Value ₺</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="green">
+                            <i class="material-icons">store</i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Rezervasyon Sayısı</p>
+                            <h3 class="title">@DB.Biletler.Where(w => w.RezervasyonMu == true).ToList().Count() Bilet</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="green">
+                            <i class="material-icons">store</i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Rez. Koltuk Sayısı</p>
+                            <h3 class="title">@DB.Biletler.Where(w => w.RezervasyonMu == true).ToList().Sum(s => s.KoltukSayisi) Koltuk</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card">
+            <div class="card-header" data-background-color="green">
+                <h4 class="title">Bilet Satış/Rezervasyon <strong>[BİLET NO: @BiletNo]</strong></h4>
+                <p class="category">Bilet satışı veya rezervasyon yapabilirsiniz.</p>
+            </div>
+            <div class="card-content">
+                <!--
+                Normal post yerine jquery post kullanıyoruz.
+                submit olayında aşağıdaki fonksiyon çalışıyor.
+                -->
+                <form action="#" method="post" onsubmit="BiletKaydet(this); return false;" id="form">
+                    <input type="hidden" name="BiletNo" value="@BiletNo" />
+                    <div class="row">
+                        <div class="col-sm-12 col-md-8">
+                            <div class="form-group">
+                                <label>Müşteri</label>
+                                <select name="UyeID" class="form-control">
+                                    @foreach (var item in Musteriler)
+                                    {
+                                        <option value="@item.ID">@item.Ad (@item.Soyad @item.Eposta @item.Telefon)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>Satış Türü</label>
+                                <select name="RezervasyonMu" class="form-control">
+                                    <option value="false">Bilet Kes</option>
+                                    <option value="true">Rezervasyon</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>Film</label>
+                                <select name="FilmID" class="form-control">
+                                    <option value="0">Film Seçiniz</option>
+                                    @foreach (var item in Filmler)
+                                    {
+                                        <option value="@item.ID">@item.FilmAdi (Vizyon Tarihi : @item.VizyonTarihi)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>Seans</label>
+                                <select name="SeansID" class="form-control">
+                                    <option value="0">Önce Film Seçmelisiniz</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>Koltuk Sayısı</label>
+                                <select name="KoltukSayisi" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding-top:20px; font-size:22px;">
+                        <strong>Ücret : </strong><span id="ToplamFiyat"></span>
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">KAYDET</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section footer{
+    <script>
+        $('[name="FilmID"]').change(function () {
+            var t = $(this);
+            $('[name="KoltukSayisi"]').html('<option value="0">Film seçiniz.</option>');
+            $.post('/Home/SeansGetir', { FilmID: t.val() }, function (data) {
+                if (data.length == 0) {
+                    demo.showNotification("Seans bulunmamaktadır.", "top", "center", "success");
+                    $('[name="SeansID"]').html('<option value="0">Seans bulunmamaktadır.</option>');
+                } else {
+                    for (var i = 0; i < data.length; i++) {
+                        var HTML = "<optgroup label=" + jsonDateFormatter(data[i].Tarih, false) + ">";
+                        for (var x = 0; x < data[i].SeansSaatleri.length; x++) {
+                            HTML += '<option value="' + data[i].SeansSaatleri[x].ID + '" data-ucret="' + data[i].SeansSaatleri[x].Ucret + '">' + (data[i].SeansSaatleri[x].Saat.Hours.toString().length == 1 ? "0" + data[i].SeansSaatleri[x].Saat.Hours : data[i].SeansSaatleri[x].Saat.Hours) + ':' + (data[i].SeansSaatleri[x].Saat.Minutes.toString().length == 1 ? "0" + data[i].SeansSaatleri[x].Saat.Minutes : data[i].SeansSaatleri[x].Saat.Minutes) + ' (Fiyat: ' + data[i].SeansSaatleri[x].Ucret + ' ₺)</option>';
+                        }
+                        HTML += "</optgroup>";
+                        $('[name="SeansID"]').append(HTML);
+                        $('[name="SeansID"] option').first().html("Seans Seçiniz")
+                    }
+                    $.post('/Home/KoltukSayisiGetir', { FilmID: t.val() }, function (data) {
+                        var HTML = "";
+                        for (var i = 1; i <= data.Kalan; i++) {
+                            HTML += '<option value="' + i + '">' + i + ' Koltuk</option>';
+                        }
+                        $('[name="KoltukSayisi"]').html(HTML);
+                    });
+                }
+            });
+        });
+
+        $('[name="SeansID"]').change(function () {
+            var t = $(this);
+            var Ucret = $('option:selected', t).attr("data-ucret");
+            var KoltukSayisi = $('[name="KoltukSayisi"]').val();
+            $('#ToplamFiyat').html(Ucret * parseInt(KoltukSayisi) + " ₺");
+        });
+
+        $('[name="KoltukSayisi"]').change(function () {
+            var t = $(this);
+            var KoltukSayisi = $('option:selected', t).val();
+            var Ucret = $('[name="SeansID"] option:selected').attr("data-ucret");
+            $('#ToplamFiyat').html(Ucret * parseInt(KoltukSayisi) + " ₺");
+        });
+
+        function BiletKaydet(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+
+            $.post('/Home/BiletKaydet', t.serialize(), function (data) {
+                if (data) {
+                    Mesaj = "Bilet kesilmiştir.";
+                    if ($('[name="RezervasyonMu"]').val() == "true") {
+                        Mesaj = "Rezervasyon yapılmıştır.";
+                    }
+                    demo.showNotification(Mesaj, "top", "center", "success");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2500);
+                } else {
+                    demo.showNotification("Kayıt oluşturulamadı.", "top", "center", "danger");
+                }
+                btn.html("KAYDET").removeAttr("disabled");
+            }).fail(function (a, b, c) {
+                demo.showNotification("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")", "top", "center", "danger");
+                btn.html("KAYDET").removeAttr("disabled");
+            });
+        }
+    </script>
+}

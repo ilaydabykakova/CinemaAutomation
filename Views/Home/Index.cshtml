@@ -1,0 +1,151 @@
+﻿@using CinemaAutomation.Models;
+@using CinemaAutomation.Helpers;
+@{
+    ViewBag.Title = "Yönetim Paneli";
+    var DB = new CinemaAutomationEntities();
+    var Filmler = DB.Filmler.ToList();
+    var Seanslar = DB.Seanslar.ToList();
+    string BiletNo = YardimciAraclar.RastgeleKarakter("XXXXXXXXXX");
+}
+
+
+<div class="row text-center">
+    <img src="~/Assets/logo.jpg" />
+</div>
+<hr />
+<div class="row text-center">
+    <div class="col-sm-offset-2 col-sm-8">
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="/Filmler/Yeni" class="btn btn-success btn-block btn-lg"><i class="glyphicon glyphicon-facetime-video" style="padding-right: 10px;"></i>Film Ekle</a>
+            </div>
+            <div class="col-sm-4">
+                <a href="/Salonlar/Yeni" class="btn btn-warning btn-block btn-lg"><i class="glyphicon glyphicon-folder-open" style="padding-right: 10px;"></i>Salon Ekle</a>
+            </div>
+            <div class="col-sm-4">
+                <a href="/Seanslar/Yeni" class="btn btn-primary btn-block btn-lg"><i class="glyphicon glyphicon-time" style="padding-right: 10px;"></i>Seans Ekle</a>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row text-center">
+    <div class="col-sm-offset-2 col-sm-8">
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-info btn-block btn-lg"><i class="glyphicon glyphicon-film" style="padding-right: 10px;"></i>Bilet Kes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row text-center">
+    <div class="col-sm-offset-2 col-sm-8">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="panel panel-success">
+                    <div class="panel-heading">Film Sayısı</div>
+                    <div class="panel-body">
+                        @DB.Filmler.ToList().Count()
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Salon Sayısı</div>
+                    <div class="panel-body">
+                        @DB.Salonlar.ToList().Count()
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">Toplam Bilet</div>
+                    <div class="panel-body">
+                        @DB.Biletler.ToList().Count()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="post" onsubmit="BiletKaydet(this); return false;" id="form">
+                    <input type="hidden" name="BiletNo" value="@BiletNo" />
+                    <div class="form-group">
+                        <label>Bilet No</label><br />
+                        <strong>@BiletNo</strong>
+                    </div>
+                    <div class="form-group">
+                        <label>Film</label>
+                        <select name="FilmID" class="form-control">
+                            <option value="0">Film Seçiniz</option>
+                            @foreach (var item in Filmler)
+                            {
+                                <option value="@item.ID">@item.FilmAdi</option>
+                            }
+                        </select>
+                        <div class="filmBilgi"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Müşteri Ad</label>
+                        <input type="text" name="Ad" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Müşteri Soyad</label>
+                        <input type="text" name="Soyad" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Müşteri Telefon</label>
+                        <input type="text" name="Telefon" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">BİLET KES</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section footer{
+    <script>
+        $('[name="FilmID"]').change(function () {
+            $.post('/Filmler/FilmGetir', { FilmID: $(this).val() }, function (data) {
+                var Html = '<b>Yönetmen:</b> : ' + data.Yonetmen + '<br />';
+                Html += '<b>Film Türü:</b> : ' + data.Yonetmen + '<br />';
+                Html += '<b>Seans:</b> : ' + data.Seans.SeansAdi + '<br />';
+                Html += '<b>Seans Tarihi:</b> : ' + data.Seans.Tarih + '<br />';
+                Html += '<b>Seans Saati:</b> : ' + data.Seans.Saat + '<br />';
+                Html += '<b>Salon:</b> : ' + data.Salon.SalonAdi + '<br />';
+                Html += '<b>Resim:</b> : <img style="width: 100px;" src="/Assets/Uploads/' + data.Resim + '">';
+                $('.filmBilgi').html(Html);
+            });
+        });
+        function BiletKaydet(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+            $.post('/Home/BiletKaydet', t.serialize(), function (data) {
+                if (data) {
+                    alert("Bilet kesilmiştir.");
+                    window.location.reload();
+                } else {
+                    alert("Bilet kesilemedi.");
+                }
+                btn.html("KAYDET").removeAttr("disabled");
+            }).fail(function (a, b, c) {
+                alert("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")");
+                btn.html("KAYDET").removeAttr("disabled");
+            });
+        }
+    </script>
+}

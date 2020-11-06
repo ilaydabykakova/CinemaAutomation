@@ -1,0 +1,86 @@
+﻿<html lang="tr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons" rel='stylesheet'>
+    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/jquery.datetimepicker.min.css" rel="stylesheet" />
+</head>
+<body style="padding: 20px;">
+
+    <div class="container">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="collapsed navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/" class="navbar-brand">Sinema Otomasyon</a>
+                </div>
+                <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-9">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/Biletler">Biletler</a></li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                Flimler <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Filmler/Index">Listele</a></li>
+                                <li><a href="/Filmler/Yeni">Yeni Ekle</a></li>
+                            </ul>
+                        </li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                Salonlar <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Salonlar/Index">Listele</a></li>
+                                <li><a href="/Salonlar/Yeni">Yeni Ekle</a></li>
+                            </ul>
+                        </li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                Seanslar <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Seanslar/Index">Listele</a></li>
+                                <li><a href="/Seanslar/Yeni">Yeni Ekle</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        @RenderBody()
+    </div>
+
+    <script src="~/Assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+    <script src="~/Assets/js/jquery.datetimepicker.full.min.js"></script>
+
+    <!--
+    Aşağıdaki kod ile sayfalardan gelen değerleri burada gösteriyoruz.
+    -->
+    @RenderSection("footer", false)
+
+    <script>
+        function Cikis(t) {
+            $.post('/Home/Cikis', function (data) {
+                if (data) {
+                    alert("Çıkış başarılı.");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert("Çıkış Yapılamadı.");
+                }
+            }).fail(function (a, b, c) {
+                alert("Çıkış Yapılamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")");
+            });
+        }
+    </script>
+</body>
+</html>

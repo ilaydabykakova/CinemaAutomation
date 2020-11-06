@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var Salonlar = (new CinemaAutomation.Models.CinemaAutomationEntities()).Salonlar.ToList();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" data-background-color="orange">
+                    <h4 class="title"><b>Salonlar</b></h4>
+                </div>
+                <div class="card-content table-responsive">
+                    <table class="table">
+                        <thead class="text-primary">
+                            <tr>
+                                <th>Salon Adı</th>
+                                <th class="text-right">Bulunduğu Sinema</th>
+                                <th class="text-center" style="width: 120px;">Film Sayısı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Salonlar.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="alert alert-danger" role="alert">Salon bulunmamaktadır.</div>
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var item in Salonlar)
+                            {
+                                <tr>
+                                    <td>@item.SalonAdi</td>
+                                    <td class="text-right">@item.Sinemalar.Baslik (@item.Sinemalar.Sehir/@item.Sinemalar.Ilce)</td>
+                                    <td class="text-center">@item.Filmler.ToList().Count()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <a href="/Salonlar/Yeni" class="btn btn-warning pull-right">YENİ EKLE<div class="ripple-container"></div></a>
+        </div>
+    </div>
+</div>

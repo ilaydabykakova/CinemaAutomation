@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Salon Ekle";
+}
+
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+        <div class="card">
+            <div class="card-header" data-background-color="green">
+                <h4 class="title">Salon Ekle</h4>
+            </div>
+            <div class="card-content">
+                <!--
+                Normal post yerine jquery post kullanıyoruz.
+                submit olayında aşağıdaki fonksiyon çalışıyor.
+                -->
+                <form action="#" method="post" onsubmit="Ekle(this); return false;" id="form">
+                    <div class="form-group">
+                        <label>Salon Adı</label>
+                        <input type="text" class="form-control" name="Baslik">
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">KAYDET</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+section ile kodalrı footer altında gösteriyoruz
+-->
+@section footer{
+    <script>
+        function Ekle(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+
+            $.post('/Salonlar/Ekle', t.serialize(), function (data) {
+                if (data) {
+                    alert("Kayıt başarılı.");
+                    document.getElementById("form").reset();
+                } else {
+                    alert("Kayıt oluşturulamadı.");
+                }
+                btn.html("KAYDET").removeAttr("disabled");
+            }).fail(function (a, b, c) {
+                alert("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")");
+                btn.html("KAYDET").removeAttr("disabled");
+            });
+        }
+    </script>
+}

@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Müşteriler";
+    var Musteriler = (new CinemaAutomation.Models.CinemaAutomationEntities()).Musteriler.ToList();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" data-background-color="orange">
+                    <h4 class="title"><b>Müşteriler</b></h4>
+                </div>
+                <div class="card-content table-responsive">
+                    <table class="table">
+                        <thead class="text-primary">
+                            <tr>
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>E-Posta</th>
+                                <th>Telefon</th>
+                                <th>Adres</th>
+                                <th class="text-center">Bilet Sayısı</th>
+                                <th class="text-center">Rezervasyon Sayısı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Musteriler.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="alert alert-danger" role="alert">Müşteri bulunmamaktadır.</div>
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var item in Musteriler)
+                            {
+                                <tr>
+                                    <td>@item.Ad</td>
+                                    <td>@item.Soyad</td>
+                                    <td>@item.Eposta</td>
+                                    <td>@item.Telefon</td>
+                                    <td>@item.Adres</td>
+                                    <td>@item.Biletler.Where(w => w.RezervasyonMu != true).ToList().Count()</td>
+                                    <td>@item.Biletler.Where(w => w.RezervasyonMu == true).ToList().Count()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <a href="/Musteriler/Yeni" class="btn btn-warning pull-right">YENİ EKLE<div class="ripple-container"></div></a>
+        </div>
+    </div>
+</div>

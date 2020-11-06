@@ -1,0 +1,123 @@
+﻿@using CinemaAutomation.Models;
+@{
+    ViewBag.Title = "Film Ekle";
+    var DB = new CinemaAutomationEntities();
+    var Salonlar = DB.Salonlar.ToList();
+    var Seanslar = DB.Seanslar.ToList();
+}
+
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+        <div class="card">
+            <div class="card-header" data-background-color="green">
+                <h4 class="title">Film Ekle</h4>
+            </div>
+            <div class="card-content">
+                <!--
+                Normal post yerine jquery post kullanıyoruz.
+                submit olayında aşağıdaki fonksiyon çalışıyor.
+                -->
+                <form action="#" method="post" onsubmit="Ekle(this); return false;" id="form">
+                    <div class="form-group">
+                        <label>Film Adı</label>
+                        <input type="text" class="form-control" name="FilmAdi">
+                    </div>
+                    <div class="form-group">
+                        <label>Resim</label>
+                        <input type="file" class="form-control" name="Image" id="ResimDosyasi">
+                    </div>
+                    <div class="form-group">
+                        <label>Salon Seçiniz</label>
+                        <select name="SalonID" class="form-control">
+                            @foreach (var item in Salonlar)
+                            {
+                            <option value="@item.ID">@item.SalonAdi</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Seans Seçiniz</label>
+                        <select name="SeansID" class="form-control">
+                            @foreach (var item in Seanslar)
+                            {
+                                <option value="@item.ID">@item.Tarih.Value.ToShortDateString() @item.Saat</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Yönetmen</label>
+                        <input type="text" class="form-control" name="Yonetmen">
+                    </div>
+                    <div class="form-group">
+                        <label>Film Türü</label>
+                        <input type="text" class="form-control" name="FilmTuru">
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">KAYDET</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--
+section ile kodalrı footer altında gösteriyoruz
+-->
+@section footer{
+
+    <script>
+        function Ekle(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+
+            // Boş bir form verisi oluşturuyoruz.
+            var FormVerileri = new FormData();
+            // Resim input unu alıyoruz
+            var ResimDosyasi = $("#ResimDosyasi").get(0);
+            // Resim seçilmişmi kontrolü yapıyoruz
+            if (ResimDosyasi.files.length == 0) {
+                //Seçilmemişse uyarı veriyoruz ve KAYDET butonunu normale çeviriyoruz.
+                alert("Resim dosyası seçiniz.");
+                btn.html("KAYDET").removeAttr("disabled");
+                return false;
+            }
+            // Resim dosyasını form verisine ekliyoruz.
+            for (var i = 0; i < ResimDosyasi.files.length; i++) {
+                FormVerileri.append(ResimDosyasi.files[i].name, ResimDosyasi.files[i]);
+            }
+            // Formdaki diğer verileride form verisine ekliyoruz.
+            var Serialize = t.serializeArray(); // Formdaki değerleri alıyoruz
+            for (var i = 0; i < Serialize.length; i++) {
+                //Form verisine ekliyoruz.
+                FormVerileri.append(Serialize[i].name, Serialize[i].value);
+            }
+            // Kayıt işlemini jquery ajax ile yapıyoruz.
+            $.ajax({
+                url: '/Filmler/Ekle', // yolumuz
+                type: "POST", // POST olarak gönderiyoruz.
+                contentType: false,
+                processData: false,
+                data: FormVerileri, // form verileri
+                success: function (data) { // işlem başarıyla tamamlanırsa burası çalışıyor.
+                    if (data) {
+                        alert("Kayıt başarılı.");
+                        document.getElementById("form").reset();
+                    } else {
+                        alert("Kayıt oluşturulamadı.");
+                    }
+                    btn.html("KAYDET").removeAttr("disabled");
+                },
+                error: function (a, b, c) { // işlem hataya düşerse burası çalışıyor.
+                    alert("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")");
+                    btn.html("KAYDET").removeAttr("disabled");
+                }
+            });
+            return false;
+        }
+
+    </script>
+}

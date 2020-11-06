@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Müşteri Ekle";
+    var Sinemalar = (new CinemaAutomation.Models.CinemaAutomationEntities()).Sinemalar.ToList();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="card">
+            <div class="card-header" data-background-color="green">
+                <h4 class="title">Müşteri Ekle</h4>
+                <p class="category">Bu bölümde yeni bir müşteri ekleyebilirsiniz.</p>
+            </div>
+            <div class="card-content">
+                <!--
+                Normal post yerine jquery post kullanıyoruz.
+                submit olayında aşağıdaki fonksiyon çalışıyor.
+                -->
+                <form action="#" method="post" onsubmit="Ekle(this); return false;" id="form">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>Ad</label>
+                                <input type="text" class="form-control" name="Ad">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>Soyad</label>
+                                <input type="text" class="form-control" name="Soyad">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>E-Posta</label>
+                                <input type="text" class="form-control" name="Eposta">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>Telefon</label>
+                                <input type="text" class="form-control" name="Telefon">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Adres</label>
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="3" name="Adres"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">KAYDET</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+section ile kodalrı footer altında gösteriyoruz
+-->
+@section footer{
+    <script>
+        function Ekle(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+
+            $.post('/Musteriler/Ekle', t.serialize(), function (data) {
+                if (data) {
+                    demo.showNotification("Kayıt başarılı.", "top", "center", "success");
+                    document.getElementById("form").reset();
+                } else {
+                    demo.showNotification("Kayıt oluşturulamadı.", "top", "center", "danger");
+                }
+                btn.html("KAYDET").removeAttr("disabled");
+            }).fail(function (a, b, c) {
+                demo.showNotification("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")", "top", "center", "danger");
+                btn.html("KAYDET").removeAttr("disabled");
+            });
+        }
+    </script>
+}

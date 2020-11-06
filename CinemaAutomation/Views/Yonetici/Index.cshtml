@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Yönetici Girişi";
+    // Giriş ekranına özel başka bir layout mevcut.
+    Layout = "/Views/Shared/_LayoutGiris.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-md-offset-4">
+            <div class="card">
+                <div class="card-header" data-background-color="blue">
+                    <h4 class="title">YÖNETİCİ GİRİŞİ</h4>
+                </div>
+                <div class="card-content">
+                    <form action="#" method="post" onsubmit="Giris(this); return false;" id="form">
+                        <div class="form-group label-floating">
+                            <label class="control-label">Kullanıcı Adı</label>
+                            <input type="text" class="form-control" name="KullaniciAdi">
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Şifre</label>
+                            <input type="password" class="form-control" name="Sifre">
+                        </div>
+                        <button type="submit" class="btn btn-info pull-right">GİRİŞ</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+section ile kodalrı footer altında gösteriyoruz
+-->
+@section footer{
+    <script>
+        function Giris(t) {
+            var t = $(t);
+            $.post('/Yonetici/GirisYap', t.serialize(), function (data) {
+                if (data) {
+                    demo.showNotification("Giriş başarılı.<br /><strong>Yönlendiriliyorsunuz..</strong>", "top", "center", "success");
+                    setTimeout(function () {
+                        window.location = "/";
+                    }, 2500);
+                    document.getElementById("form").reset();
+                } else {
+                    demo.showNotification("Giriş yapılamadı! Bilgilerinizi kontrol ediniz.", "top", "center", "danger");
+                }
+            }).fail(function (a, b, c) {
+                demo.showNotification("Hata oluştu. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")", "top", "center", "danger");
+            });
+        }
+    </script>
+}

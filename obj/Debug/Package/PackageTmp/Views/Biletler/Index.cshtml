@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Biletler";
+    var Biletler = (new CinemaAutomation.Models.CinemaAutomationEntities()).Biletler.ToList();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" data-background-color="orange">
+                    <h4 class="title"><b>Biletler</b></h4>
+                </div>
+                <div class="card-content table-responsive">
+                    <table class="table">
+                        <thead class="text-primary">
+                            <tr>
+                                <th>Bilet No</th>
+                                <th>Film</th>
+                                <th>Koltuk Adeti</th>
+                                <th>Müşteri</th>
+                                <th>Rezervasyon mu?</th>
+                                <th>Seans</th>
+                                <th class="text-right">Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Biletler.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="alert alert-danger" role="alert">Bilet bulunmamaktadır.</div>
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var item in Biletler)
+                            {
+                                <tr>
+                                    <td>@item.BiletNo</td>
+                                    <td>@item.Filmler.FilmAdi</td>
+                                    <td>@item.KoltukSayisi</td>
+                                    <td>@item.Musteriler.Ad @item.Musteriler.Soyad <br /> (@item.Musteriler.Eposta) <br /> (@item.Musteriler.Telefon)</td>
+                                    <td>
+                                        @if (@item.RezervasyonMu == true)
+                                        {
+                                            <text>Evet</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Hayır</text>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Seanslar.Tarih != null)
+                                        {
+                                            string Tarih = ((DateTime)item.Seanslar.Tarih).Date.ToShortDateString();
+                                            <text>@Tarih</text>
+                                        }
+                                        / @item.Seanslar.Saat
+                                    </td>
+                                    <td>@item.Tutar</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <a href="/Home" class="btn btn-warning pull-right">BİLET KES<div class="ripple-container"></div></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+﻿Proje özellikleri;
+
++ Yazılım Mimari :::::::::::::::::::::::
+	* C# MVC
+
++ Front-End (Önyüz) Çözümü :::::::::::::::::::::::
+	* Bootstrap v3 hazır Html template
+
++ Veritabanı Çözümü :::::::::::::::::::::::
+	* MsSQL Server (MsSql13 v13.0.1601.5), x64, Turkish_CI_AS
+
+******************************************************************************************
+
+VERİTABANI :::::::::::::::::::::::
+- Adet tablolardan oluştur
+- Veritabanındaki "Database Diagrams" içinde tablo ilişkileri mevcut.
+- Tablolar;
+	+ Uyeler (Bilet satın alan ve rezervasyon yapan kullanıcılar)
+	+ Yoneticiler (Salon, Seans, Flim ekler,siler,düzenler. Bilet işlemlerini yapar (siler,iptal eder, seans değiştirir))
+- Bir tabloda ID sütununa naıl Primary Key değeri verilir. (Primary Key = Benzersiz Anahtar)
+	+ Tablo ya sağ tıkanır
+	+ Menüden "Design" e tıklanır.
+	+ ID adındaki sütunun "DataType" değeri "int" olarak seçilir.
+	+ Sütuna ait satırın herhangi bir yerine sağ tıklanır, en üstteki seçenek seçilir (Set Primary Key)
+	+ Silmek içinde yine aynı menüden işlem yapılır (Bu sefer menüden Remove Primary Key yaza)
+	+ Buradaki ID değerlerinin otomatik artması için ID sütununa ait satır seçili iken aşağıdaki "Column Properties" bölümünde "Identity Specification" menüsü açılır
+	+ (Is Identity) yazan yerin değeri "Yes" oalrak ayarlanır.
+- Tablo ilişkilendirme nasıl yapılır.
+	-- Bunun aslınd iki yöntemi var.
+	### Yöntem 1;
+		+ "Design" penceresi açıkken ilgili sütunun satırına sağ tıklanır.
+		+ "Relationships" e tıklanır.
+		+ Açılan pencerede "Add" e tıklanır. (Sola bir kayıt gelir.)
+		+ Sağ tarafta "Tables And Column Specifitaion" satırına tıkladıktan sonra sağda 3 noktalı kutu gözükür.
+		+ Kutuya tıklanır.
+		+ Açılan pencere iki bölümlüdür.
+		+ Solunda bağlamak istediğin tablo seçimi ve tabloya ait sütun seçimi yapılır.
+		+ Sağdaki kolonda işlem yaptığın tablo seçilirdir ve değiştirilemez. Ama sütun değiştirilebilir.
+		++ Örneğin:
+			-- "Biletler" tablosunda "FlimID" vardır.
+			-- "FlimID" ile "Flimler" tablosu ilişkilendirilmelidir.
+			-- Bunun için;
+				* Flimler tablosu "Design" olarak açılır.
+				* "FlimID" sütununa sağ tıklanır, "Relationships" e girilir.
+				* Sol alttaki "Add" e tıklanır yeni kayıt oluşturulur.
+				* Sağ taraftaki "Tables And Column Specifitaion" satırına tıklanır ve sağda çıkan 3 nokta kutuya tıklanır.
+				* Açılan pencerede;
+					= Soldaki bölümden "Flimler" tablosu seçilir ve ID sütunu seçilir.
+					= Sağ taraftan "FlimID" değeri seçilir.
+					= OK a tıklanır ve pencere kapatılır.
+					= İşlem bu kadar.
+	### Yöntem 2;
+		+ Veritabanında "Database Diagrams" a çift tıklanır.
+		+ Uyarı penceresinde "Yes" e tıklanır.
+		+ Açılan sayfada sağ tık menüsünden ve Add Table e tıklanır.
+		+ Tablolar seçilir ve eklenir.
+		+ Tablolar beyaz alana gelecektir.
+		+ Az önceki örnekle devame edelim.
+		+ "Biletler" tablomuzdaki "FlimID" ile "Flimler" tablomuzu ilişkilendirmek için;
+			* FlimID sütununu baş ksımından tutup Flimler tablomuzdaki ID sütununa sürükleyip bırakmak.
+			* Başka bir işleme gerek yok. Tablolar arasında başlantı hatları oluşacaktır.
+			* Yöntem 2 yerine Yöntem 1 i yapıp, daha sonra Yöntem 1 ile de devam edebilirsiniz.
+			* Zaten diagram oluşturup tabloları diagram sayfasına eklediğinizde otomatik olarak ilişki hatları gözükecektir.
+
+
+YAZILIM :::::::::::::::::::::::
+- Views > Shared > _Layout.cshtml;
+	* Layout ortak sayfasıdır.
+	* Her view bundan kalıntı alır.
+	* _Layout.cshtml içerisindeki RenderBody() kodu View'lerin gösterileceği alanı ifade eder.
+	* Yani; Layoutta ortak alanlar header, footer gibi bölümler vardır. Ve örneğin HomeController > Index View i açıldığında header ve footer otomatik olarak gelir (Yani HomeController > Index View'i RenderBody() kodunun olduğu yere yerleşir.)
+	* View larda istenirse Layout kullanımı engellenebilir.
+		-- Şöyleki;
+			+ View (.cshtml) dosyasının üst kısmına @{...} üç noktanın olduğu yere " Layout = null " yazarsanız Layoutu es geçmiş olursunuz.
+			+ Önemli Bilgi; Views > Shared > _ViewStart.cshtml de Layout kodu mevcuttur. Buda Viewlerin ortak dosyasıdır. Adından da anlaşıldığı gibi View başlanıçı sağlar.
+
+- EntityFramework Referansı Nasıl Dahil Edilir;
+	+ Solution Explorer'da "References" sağ tıklanıp "Manage Nuget Packets" açılır. (Proje çalışıyorsa açamazsınız.)
+	+ Açılan pencerede Browse sekmesindeyken "EntityFramework" aratın.
+	+ Çıkan ilk sonucun sağında bulunan aşağı bakan ok ikonuna tıklayarak yükleyin. (43Milyon indirme yapılmış olan içerik)
+
+- Veritabanını içeri aktarma
+	+ Solution Explorer penceresindeki Models klasörüne sağ tıklanır. (Models olması şart değil. Genel olarak Context adında klasörde kullanılıyor. (İstediğiniz klasör olabilir))
+	+ "Add" menüsünden "New Item" a tıklanır.
+	+ Sağ üst arama alanına "Entity" yazılır.
+	+ Çıkan sonuçlardan "ADO.NET Entity Data Model" seçilir ve aşağıdaki alana isim girilir (ben "veritabani") yazdım.
+	+ Sonrasında açılacak pencerede "New Connection" butonuna tıklanır. (Veritabanına bağlanmak için gerekli işlemleri yapacağız.)
+	+ Açılan pencerede "Server Name" kısmına "MsSQL sunucunuzun adı yazılır." (benim sunucu adım şöyle: DESKTOP-THQK8P0\MSSQLSRVR)
+	+ Authentication menüsünden "SQL Server Authentication" seçilir (Window auth da seçilebilir ama SQL auth daha sağlıklı)
+	+ "Select or enter a database name: " alanından veritabanı seçilir ve OK a tıklanır.
+	+ O pencere kapanır arkadaki pencere aktif olur ve bilgiler değişir.
+	+ Oradaki iki radio seçeneğinden alttakini "Yes" seçilir.
+	+ En alttaki kutuda veritabanına bağlanıp tablolarda işlem yapmamız için kullanacağımız name değeri vardır.
+	+ Bu değeri elde etmek için; Models.CinemaAutomationEntities yazmalıyız. Kodlarda daha anlaşılır.
+		(Tabi "Models" değerini c# kodlarının en üstüne eklersek "using Models" olarak, o zaman sadece CinemaAutomationEntities yazmamız yeterli olacaktır. Yukarıya yazdığımız referans olarak orda kalmış olacaktır.)
+	+ Next deyip sonraki sayfada "Tables" in checkbox ını işaretliyor tüm tabloları içeri çekeceğimizi ifade ediyoruz.
+	+ Finish diyerek işlemi tamamlıyoruz.
+	+ İşlem sonunda entity miz açılacak tablolar ve ilişki harları gözükecektir. (diagram olarak)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

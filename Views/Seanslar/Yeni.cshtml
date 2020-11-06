@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Seans Ekle";
+}
+
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+        <div class="card">
+            <div class="card-header" data-background-color="green">
+                <h4 class="title">Seans Ekle</h4>
+            </div>
+            <div class="card-content">
+                <!--
+                Normal post yerine jquery post kullanıyoruz.
+                submit olayında aşağıdaki fonksiyon çalışıyor.
+                -->
+                <form action="#" method="post" onsubmit="Ekle(this); return false;" id="form">
+                    <div class="form-group">
+                        <label>Seans Adı</label>
+                        <input type="text" class="form-control" name="SeansAdi">
+                    </div>
+                    <div class="form-group">
+                        <label>Tarih</label>
+                        <input type="text" class="form-control" name="Tarih" id="tarih">
+                    </div>
+                    <div class="form-group">
+                        <label>Saat</label>
+                        <input type="text" class="form-control" name="Saat" id="saat">
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">KAYDET</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+section ile kodalrı footer altında gösteriyoruz
+-->
+@section footer{
+    <script>
+
+        $('#tarih').datetimepicker({
+            timepicker: false,
+            format: 'd/m/Y'
+        });
+        $('#saat').datetimepicker({
+            datepicker: false,
+            format: 'H:i'
+        });
+
+        function Ekle(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+            $.post('/Seanslar/Ekle', t.serialize(), function (data) {
+                if (data) {
+                    alert("Kayıt başarılı.");
+                    document.getElementById("form").reset();
+                } else {
+                    alert("Kayıt oluşturulamadı.");
+                }
+                btn.html("KAYDET").removeAttr("disabled");
+            }).fail(function (a, b, c) {
+                alert("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")");
+                btn.html("KAYDET").removeAttr("disabled");
+            });
+        }
+    </script>
+}

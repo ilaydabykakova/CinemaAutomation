@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CinemaAutomationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Biletler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BiletNo" Type="varchar" MaxLength="165" />
+    <Property Name="FilmID" Type="int" Nullable="false" />
+    <Property Name="SeansID" Type="int" />
+    <Property Name="RezervasyonMu" Type="bit" />
+    <Property Name="UyeID" Type="int" />
+    <Property Name="KoltukSayisi" Type="int" />
+    <Property Name="Tutar" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="Filmler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FilmAdi" Type="varchar" MaxLength="165" />
+    <Property Name="Resim" Type="varchar" MaxLength="165" />
+    <Property Name="SalonID" Type="int" />
+    <Property Name="SeansID" Type="int" />
+    <Property Name="Yonetmen" Type="varchar" MaxLength="165" />
+    <Property Name="FilmTuru" Type="nchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="Musteriler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Ad" Type="varchar" MaxLength="165" />
+    <Property Name="Soyad" Type="varchar" MaxLength="165" />
+    <Property Name="Telefon" Type="varchar" MaxLength="165" />
+  </EntityType>
+  <EntityType Name="Salonlar">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalonAdi" Type="varchar" MaxLength="165" />
+  </EntityType>
+  <EntityType Name="Seanslar">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SeansAdi" Type="varchar" MaxLength="165" />
+    <Property Name="Tarih" Type="date" />
+    <Property Name="Saat" Type="time" Precision="7" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Yoneticiler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Ad" Type="varchar" MaxLength="165" />
+    <Property Name="Soyad" Type="varchar" MaxLength="165" />
+    <Property Name="KullaniciAdi" Type="varchar" MaxLength="165" />
+    <Property Name="Sifre" Type="varchar" MaxLength="165" />
+    <Property Name="Eposta" Type="varchar" MaxLength="165" />
+    <Property Name="Token" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_Biletler_Filmler">
+    <End Role="Filmler" Type="Self.Filmler" Multiplicity="1" />
+    <End Role="Biletler" Type="Self.Biletler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Filmler">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Biletler">
+        <PropertyRef Name="FilmID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Biletler_Seanslar">
+    <End Role="Seanslar" Type="Self.Seanslar" Multiplicity="0..1" />
+    <End Role="Biletler" Type="Self.Biletler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Seanslar">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Biletler">
+        <PropertyRef Name="SeansID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Biletler_Uyeler">
+    <End Role="Musteriler" Type="Self.Musteriler" Multiplicity="0..1" />
+    <End Role="Biletler" Type="Self.Biletler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Musteriler">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Biletler">
+        <PropertyRef Name="UyeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Filmler_Salonlar">
+    <End Role="Salonlar" Type="Self.Salonlar" Multiplicity="0..1" />
+    <End Role="Filmler" Type="Self.Filmler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Salonlar">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Filmler">
+        <PropertyRef Name="SalonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Filmler_Seanslar">
+    <End Role="Seanslar" Type="Self.Seanslar" Multiplicity="0..1" />
+    <End Role="Filmler" Type="Self.Filmler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Seanslar">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Filmler">
+        <PropertyRef Name="SeansID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CinemaAutomationModelStoreContainer">
+    <EntitySet Name="Biletler" EntityType="Self.Biletler" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Filmler" EntityType="Self.Filmler" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Musteriler" EntityType="Self.Musteriler" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Salonlar" EntityType="Self.Salonlar" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Seanslar" EntityType="Self.Seanslar" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Yoneticiler" EntityType="Self.Yoneticiler" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Biletler_Filmler" Association="Self.FK_Biletler_Filmler">
+      <End Role="Filmler" EntitySet="Filmler" />
+      <End Role="Biletler" EntitySet="Biletler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Biletler_Seanslar" Association="Self.FK_Biletler_Seanslar">
+      <End Role="Seanslar" EntitySet="Seanslar" />
+      <End Role="Biletler" EntitySet="Biletler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Biletler_Uyeler" Association="Self.FK_Biletler_Uyeler">
+      <End Role="Musteriler" EntitySet="Musteriler" />
+      <End Role="Biletler" EntitySet="Biletler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Filmler_Salonlar" Association="Self.FK_Filmler_Salonlar">
+      <End Role="Salonlar" EntitySet="Salonlar" />
+      <End Role="Filmler" EntitySet="Filmler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Filmler_Seanslar" Association="Self.FK_Filmler_Seanslar">
+      <End Role="Seanslar" EntitySet="Seanslar" />
+      <End Role="Filmler" EntitySet="Filmler" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

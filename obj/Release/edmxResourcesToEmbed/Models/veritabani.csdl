@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CinemaAutomationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Biletler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BiletNo" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="FilmID" Type="Int32" Nullable="false" />
+    <Property Name="SeansID" Type="Int32" />
+    <Property Name="RezervasyonMu" Type="Boolean" />
+    <Property Name="UyeID" Type="Int32" />
+    <Property Name="KoltukSayisi" Type="Int32" />
+    <Property Name="Tutar" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="Filmler" Relationship="Self.FK_Biletler_Filmler" FromRole="Biletler" ToRole="Filmler" />
+    <NavigationProperty Name="Seanslar" Relationship="Self.FK_Biletler_Seanslar" FromRole="Biletler" ToRole="Seanslar" />
+    <NavigationProperty Name="Musteriler" Relationship="Self.FK_Biletler_Uyeler" FromRole="Biletler" ToRole="Musteriler" />
+  </EntityType>
+  <EntityType Name="Filmler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FilmAdi" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Resim" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Aciklama" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Yildiz" Type="Int32" />
+    <Property Name="VizyonTarihi" Type="DateTime" Precision="0" />
+    <Property Name="IMDBPuani" Type="Decimal" Precision="18" Scale="1" />
+    <Property Name="SalonID" Type="Int32" />
+    <NavigationProperty Name="Biletler" Relationship="Self.FK_Biletler_Filmler" FromRole="Filmler" ToRole="Biletler" />
+    <NavigationProperty Name="Salonlar" Relationship="Self.FK_Filmler_Salonlar" FromRole="Filmler" ToRole="Salonlar" />
+    <NavigationProperty Name="Seanslar" Relationship="Self.FK_Seanslar_Filmler" FromRole="Filmler" ToRole="Seanslar" />
+  </EntityType>
+  <EntityType Name="Musteriler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Ad" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Soyad" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Eposta" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Telefon" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Adres" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Biletler" Relationship="Self.FK_Biletler_Uyeler" FromRole="Musteriler" ToRole="Biletler" />
+  </EntityType>
+  <EntityType Name="Salonlar">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalonAdi" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Aciklama" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="SinemaID" Type="Int32" />
+    <Property Name="KoltukSayisi" Type="Int32" />
+    <NavigationProperty Name="Filmler" Relationship="Self.FK_Filmler_Salonlar" FromRole="Salonlar" ToRole="Filmler" />
+    <NavigationProperty Name="Sinemalar" Relationship="Self.FK_Salonlar_Sinemalar" FromRole="Salonlar" ToRole="Sinemalar" />
+  </EntityType>
+  <EntityType Name="Seanslar">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FilmID" Type="Int32" />
+    <Property Name="Tarih" Type="DateTime" Precision="0" />
+    <Property Name="Saat" Type="Time" Precision="7" />
+    <Property Name="UCD" Type="Boolean" />
+    <Property Name="Ucret" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="Biletler" Relationship="Self.FK_Biletler_Seanslar" FromRole="Seanslar" ToRole="Biletler" />
+    <NavigationProperty Name="Filmler" Relationship="Self.FK_Seanslar_Filmler" FromRole="Seanslar" ToRole="Filmler" />
+  </EntityType>
+  <EntityType Name="Sinemalar">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Baslik" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Sehir" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Ilce" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Salonlar" Relationship="Self.FK_Salonlar_Sinemalar" FromRole="Sinemalar" ToRole="Salonlar" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Yoneticiler">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Ad" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Soyad" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="KullaniciAdi" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Sifre" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Eposta" Type="String" MaxLength="165" FixedLength="false" Unicode="false" />
+    <Property Name="Token" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK_Biletler_Filmler">
+    <End Role="Filmler" Type="Self.Filmler" Multiplicity="1" />
+    <End Role="Biletler" Type="Self.Biletler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Filmler">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Biletler">
+        <PropertyRef Name="FilmID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Biletler_Seanslar">
+    <End Role="Seanslar" Type="Self.Seanslar" Multiplicity="0..1" />
+    <End Role="Biletler" Type="Self.Biletler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Seanslar">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Biletler">
+        <PropertyRef Name="SeansID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Biletler_Uyeler">
+    <End Role="Musteriler" Type="Self.Musteriler" Multiplicity="0..1" />
+    <End Role="Biletler" Type="Self.Biletler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Musteriler">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Biletler">
+        <PropertyRef Name="UyeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Filmler_Salonlar">
+    <End Role="Salonlar" Type="Self.Salonlar" Multiplicity="0..1" />
+    <End Role="Filmler" Type="Self.Filmler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Salonlar">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Filmler">
+        <PropertyRef Name="SalonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Seanslar_Filmler">
+    <End Role="Filmler" Type="Self.Filmler" Multiplicity="0..1" />
+    <End Role="Seanslar" Type="Self.Seanslar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Filmler">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Seanslar">
+        <PropertyRef Name="FilmID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Salonlar_Sinemalar">
+    <End Role="Sinemalar" Type="Self.Sinemalar" Multiplicity="0..1" />
+    <End Role="Salonlar" Type="Self.Salonlar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sinemalar">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Salonlar">
+        <PropertyRef Name="SinemaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CinemaAutomationEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Biletler" EntityType="Self.Biletler" />
+    <EntitySet Name="Filmler" EntityType="Self.Filmler" />
+    <EntitySet Name="Musteriler" EntityType="Self.Musteriler" />
+    <EntitySet Name="Salonlar" EntityType="Self.Salonlar" />
+    <EntitySet Name="Seanslar" EntityType="Self.Seanslar" />
+    <EntitySet Name="Sinemalar" EntityType="Self.Sinemalar" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Yoneticiler" EntityType="Self.Yoneticiler" />
+    <AssociationSet Name="FK_Biletler_Filmler" Association="Self.FK_Biletler_Filmler">
+      <End Role="Filmler" EntitySet="Filmler" />
+      <End Role="Biletler" EntitySet="Biletler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Biletler_Seanslar" Association="Self.FK_Biletler_Seanslar">
+      <End Role="Seanslar" EntitySet="Seanslar" />
+      <End Role="Biletler" EntitySet="Biletler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Biletler_Uyeler" Association="Self.FK_Biletler_Uyeler">
+      <End Role="Musteriler" EntitySet="Musteriler" />
+      <End Role="Biletler" EntitySet="Biletler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Filmler_Salonlar" Association="Self.FK_Filmler_Salonlar">
+      <End Role="Salonlar" EntitySet="Salonlar" />
+      <End Role="Filmler" EntitySet="Filmler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Seanslar_Filmler" Association="Self.FK_Seanslar_Filmler">
+      <End Role="Filmler" EntitySet="Filmler" />
+      <End Role="Seanslar" EntitySet="Seanslar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Salonlar_Sinemalar" Association="Self.FK_Salonlar_Sinemalar">
+      <End Role="Sinemalar" EntitySet="Sinemalar" />
+      <End Role="Salonlar" EntitySet="Salonlar" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

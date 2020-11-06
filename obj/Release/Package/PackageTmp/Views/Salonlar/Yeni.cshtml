@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Salon Ekle";
+    var Sinemalar = (new CinemaAutomation.Models.CinemaAutomationEntities()).Sinemalar.ToList();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="card">
+            <div class="card-header" data-background-color="green">
+                <h4 class="title">Salon Ekle</h4>
+                <p class="category">Bu bölümde yeni bir salon ekleyebilirsiniz.</p>
+            </div>
+            <div class="card-content">
+                <!--
+                Normal post yerine jquery post kullanıyoruz.
+                submit olayında aşağıdaki fonksiyon çalışıyor.
+                -->
+                <form action="#" method="post" onsubmit="Ekle(this); return false;" id="form">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>Salon Adı</label>
+                                <input type="text" class="form-control" name="Baslik">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-2">
+                            <div class="form-group">
+                                <label>Koltuk Sayısı</label>
+                                <input type="text" class="form-control" name="KoltukSayisi">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>Sinema</label>
+                                <select name="SinemaID" class="form-control">
+                                    @foreach (var item in Sinemalar)
+                                    {
+                                        <option value="@item.ID">@item.Baslik</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <div class="form-group">
+                                    <label class="control-label"> Salon hakkında bilgi veriniz.</label>
+                                    <textarea class="form-control" rows="3" name="Aciklama"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">KAYDET</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+section ile kodalrı footer altında gösteriyoruz
+-->
+@section footer{
+    <script>
+        function Ekle(t) {
+            var t = $(t);
+            //KAYDET butonu
+            var btn = $('[type="submit"]', t);
+            // Kaydet butonu metni değiştiriyoruz ve disabled ediyoruz bir daha tıklanamasın.
+            btn.html("BEKLEYİNİZ..").attr("disabled", "disabled");
+
+            $.post('/Salonlar/Ekle', t.serialize(), function (data) {
+                if (data) {
+                    demo.showNotification("Kayıt başarılı.", "top", "center", "success");
+                    document.getElementById("form").reset();
+                } else {
+                    demo.showNotification("Kayıt oluşturulamadı.", "top", "center", "danger");
+                }
+                btn.html("KAYDET").removeAttr("disabled");
+            }).fail(function (a, b, c) {
+                demo.showNotification("Kayıt oluşturulamadı. (<strong>Hata:</strong> " + a.status + " " + a.statusText + ")", "top", "center", "danger");
+                btn.html("KAYDET").removeAttr("disabled");
+            });
+        }
+    </script>
+}
